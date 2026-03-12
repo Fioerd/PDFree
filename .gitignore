@@ -1,0 +1,36 @@
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# macOS
+.DS_Store
+
+# IDE / editor
+.vscode/
+.cursor/
+.idea/
+*.code-workspace
+pyrightconfig.json
+
+# Claude Code session data
+.claude/
+
+# Dev / prototype files (not part of the app)
+write_table.py
+generate_logo.py
+*.html
+icons-export.svg
+logo_preview.png
+LOGO.png
+Untitled
+
+# Build / dist
+dist/
+build/
+*.egg-info/

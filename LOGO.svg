@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+
+  <!-- Background: light blue rounded square -->
+  <rect width="512" height="512" rx="112" ry="112" fill="#DBEAFE"/>
+
+  <!-- ── Document ─────────────────────────────────────────────────── -->
+  <!-- Body with folded top-right corner, rounded bottom corners -->
+  <path d="M148 82
+           L288 82
+           L364 158
+           L364 406 Q364 422 348 422
+           L164 422 Q148 422 148 406
+           Z"
+        fill="none" stroke="#3B6FD4" stroke-width="22"
+        stroke-linejoin="round" stroke-linecap="round"/>
+
+  <!-- Fold flap lines -->
+  <path d="M288 82 L288 158 L364 158"
+        fill="none" stroke="#3B6FD4" stroke-width="22"
+        stroke-linejoin="round" stroke-linecap="round"/>
+
+  <!-- ── Pencil ──────────────────────────────────────────────────── -->
+  <!-- Cap (upper-right) extends past doc edge; tip (lower-left) inside doc -->
+  <!-- Centre (262,247), natural length ~210px, rotated -45°               -->
+  <g transform="translate(262,247) rotate(-45)">
+
+    <!-- Silhouette: rounded eraser cap → wide shaft → tapered tip -->
+    <path d="M -18 -103 Q -18 -116 0 -116 Q 18 -116 18 -103
+             L 18 54
+             L 0 96
+             L -18 54
+             Z"
+          fill="none" stroke="#3B6FD4" stroke-width="18"
+          stroke-linejoin="round" stroke-linecap="round"/>
+
+    <!-- Eraser band -->
+    <line x1="-18" y1="-80" x2="18" y2="-80"
+          stroke="#3B6FD4" stroke-width="11" stroke-linecap="butt"/>
+
+    <!-- Centre groove -->
+    <line x1="0" y1="-80" x2="0" y2="54"
+          stroke="#3B6FD4" stroke-width="8" stroke-linecap="butt"/>
+
+  </g>
+
+</svg>
