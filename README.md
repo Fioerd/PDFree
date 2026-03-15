@@ -16,13 +16,21 @@ More tools (merge, crop, watermark, password, OCR, etc.) are shown in the UI and
 
 ## Installation
 
-### Option 1 — Windows .exe (no Python required)
+### Option 1 — Pre-built app (no Python required)
 
+**Windows**
 1. Go to the [Releases page](https://github.com/Fioerd/PDFree/releases)
-2. Download `PDFree.exe` from the latest release
-3. Double-click to run — no installation needed
+2. Download `PDFree_Setup.exe` from the latest release
+3. Run the installer
 
 > Windows SmartScreen may show an "Unknown publisher" warning on first launch. Click **More info → Run anyway** to proceed.
+
+**macOS**
+1. Go to the [Releases page](https://github.com/Fioerd/PDFree/releases)
+2. Download `PDFree.dmg` from the latest release
+3. Open the `.dmg` and drag **PDFree.app** to your Applications folder
+
+> Gatekeeper may block the app on first launch because it is not notarized. Right-click (or Control-click) the app → **Open** → **Open** to allow it.
 
 ---
 

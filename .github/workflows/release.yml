@@ -1,0 +1,140 @@
+name: Build & Release
+
+# Trigger by pushing a version tag: git tag v1.0.0 && git push origin v1.0.0
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  # ──────────────────────────────────────────────
+  # macOS — builds PDFree.dmg
+  # ──────────────────────────────────────────────
+  build-mac:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Install librsvg (for icon conversion)
+        run: brew install librsvg
+
+      - name: Convert SVG → ICNS
+        run: |
+          mkdir -p PDFree.iconset
+          for size in 16 32 128 256 512; do
+            rsvg-convert -w $size       -h $size       LOGO.svg -o PDFree.iconset/icon_${size}x${size}.png
+            rsvg-convert -w $((size*2)) -h $((size*2)) LOGO.svg -o PDFree.iconset/icon_${size}x${size}@2x.png
+          done
+          iconutil -c icns PDFree.iconset -o LOGO.icns
+          rm -rf PDFree.iconset
+
+      - name: Build PDFree.app
+        run: pyinstaller PDFree-mac.spec --noconfirm
+
+      - name: Install create-dmg
+        run: brew install create-dmg
+
+      - name: Create PDFree.dmg
+        run: |
+          create-dmg \
+            --volname "PDFree" \
+            --volicon "LOGO.icns" \
+            --window-pos 200 120 \
+            --window-size 600 400 \
+            --icon-size 100 \
+            --icon "PDFree.app" 150 185 \
+            --hide-extension "PDFree.app" \
+            --app-drop-link 450 185 \
+            "dist/PDFree.dmg" \
+            "dist/PDFree.app"
+
+      - name: Upload DMG artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: PDFree-mac
+          path: dist/PDFree.dmg
+
+  # ──────────────────────────────────────────────
+  # Windows — builds PDFree_Setup.exe
+  # ──────────────────────────────────────────────
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: Build PDFree.exe
+        run: pyinstaller PDFree.spec --noconfirm
+
+      - name: Build installer with Inno Setup
+        run: |
+          choco install innosetup --no-progress -y
+          iscc PDFree.iss
+
+      - name: Upload Setup artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: PDFree-windows
+          path: dist/PDFree_Setup.exe
+
+  # ──────────────────────────────────────────────
+  # Publish — creates the GitHub Release
+  # ──────────────────────────────────────────────
+  release:
+    needs: [build-mac, build-windows]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download macOS artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: PDFree-mac
+          path: artifacts
+
+      - name: Download Windows artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: PDFree-windows
+          path: artifacts
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: PDFree ${{ github.ref_name }}
+          body: |
+            ## PDFree ${{ github.ref_name }}
+
+            ### Download
+
+            | Platform | File |
+            |----------|------|
+            | macOS (drag to Applications) | `PDFree.dmg` |
+            | Windows (installer) | `PDFree_Setup.exe` |
+
+            **macOS note:** If Gatekeeper blocks the app, right-click → Open → Open.
+            **Windows note:** If SmartScreen warns you, click More info → Run anyway.
+          files: |
+            artifacts/PDFree.dmg
+            artifacts/PDFree_Setup.exe
