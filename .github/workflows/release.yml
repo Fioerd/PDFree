@@ -13,10 +13,10 @@ jobs:
   build-mac:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.2
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v5.4.0
         with:
           python-version: '3.11'
 
@@ -60,7 +60,7 @@ jobs:
             "dist/PDFree.app"
 
       - name: Upload DMG artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: PDFree-mac
           path: dist/PDFree.dmg
@@ -71,10 +71,10 @@ jobs:
   build-windows:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.2
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v5.4.0
         with:
           python-version: '3.11'
 
@@ -93,7 +93,7 @@ jobs:
           iscc PDFree.iss
 
       - name: Upload Setup artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: PDFree-windows
           path: dist/PDFree_Setup.exe
@@ -108,19 +108,19 @@ jobs:
       contents: write
     steps:
       - name: Download macOS artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v4.2.1
         with:
           name: PDFree-mac
           path: artifacts
 
       - name: Download Windows artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v4.2.1
         with:
           name: PDFree-windows
           path: artifacts
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v2.3.2
         with:
           name: PDFree ${{ github.ref_name }}
           body: |
